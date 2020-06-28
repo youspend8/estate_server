@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,6 +28,8 @@ public class TradeMasterDTO {
     private Integer dealMonth;
     @Column(name="DEAL_DAY")
     private Integer dealDay;
+    @Column(name="DEAL_DATE")
+    private Date dealDate;
     @Column(name="DONG")
     private String dong;
     @Column(name="JIBUN")

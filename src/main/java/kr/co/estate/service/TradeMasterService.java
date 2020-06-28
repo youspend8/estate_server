@@ -2,6 +2,7 @@ package kr.co.estate.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.estate.entity.SearchVO;
 import kr.co.estate.entity.TradeMasterDTO;
 import kr.co.estate.repository.TradeMasterRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,9 @@ import java.util.List;
 public class TradeMasterService {
     private final TradeMasterRepository tradeMasterRepository;
 
-    public String fetchAll() throws JsonProcessingException {
-        List<TradeMasterDTO> list = tradeMasterRepository.findAll(PageRequest.of(0, 10)).toList();
+    public String fetchAll(SearchVO searchVO) throws JsonProcessingException {
+        List<TradeMasterDTO> list = tradeMasterRepository
+                .findAllByOrderByDealDateDesc(PageRequest.of(searchVO.getPage() - 1, searchVO.getSize())).toList();
 
         return new ObjectMapper().writeValueAsString(list);
     }
