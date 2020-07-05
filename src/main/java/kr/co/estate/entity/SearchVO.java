@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class SearchVO {
     private String name;
+    private String region;
+    private String sigungu;
     private int page;
     private int size;
 }

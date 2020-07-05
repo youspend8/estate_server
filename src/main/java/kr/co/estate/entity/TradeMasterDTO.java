@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -56,4 +55,8 @@ public class TradeMasterDTO {
     private String name;
     @Column(name="VILLA_TYPE")
     private String villaType;
+
+    public long amountByPyung() {
+        return Math.round((this.getAmount()) / (this.getArea() / 3.3));
+    }
 }

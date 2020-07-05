@@ -5,20 +5,30 @@ import kr.co.estate.entity.SearchVO;
 import kr.co.estate.service.TradeMasterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value="/search")
+@RequestMapping(value="/trade")
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
-public class SearchController {
+public class TradeController {
     private final TradeMasterService tradeMasterService;
 
-    @GetMapping(value="/search")
-    public String index(
+    @GetMapping(value = "/search")
+    public ResponseEntity<String> search(
             @ModelAttribute SearchVO searchVO) throws JsonProcessingException {
         log.info(">> searchVo :: " + searchVO);
-        return tradeMasterService.fetchAll(searchVO);
+
+        return ResponseEntity.ok(tradeMasterService.fetchAll(searchVO));
+    }
+
+    @GetMapping(value = "/stats")
+    public ResponseEntity<String> stats(
+            @ModelAttribute SearchVO searchVO) throws JsonProcessingException {
+        log.info(">> searchVo :: " + searchVO);
+
+        return ResponseEntity.ok(tradeMasterService.priceByPyung(searchVO));
     }
 }
