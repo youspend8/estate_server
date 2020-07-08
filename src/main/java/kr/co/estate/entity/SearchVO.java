@@ -13,4 +13,6 @@ public class SearchVO {
     private String sigungu;
     private int page;
     private int size;
+    private String sortType;
+    private String sortMode;
 }
