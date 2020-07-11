@@ -1,7 +1,5 @@
 package kr.co.estate.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.co.estate.entity.SearchVO;
 import kr.co.estate.service.SearchHistoryService;
 import kr.co.estate.service.TradeMasterService;
 import lombok.RequiredArgsConstructor;
@@ -12,19 +10,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value="/search")
-@CrossOrigin(value = "*", allowCredentials = "true")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
 public class SearchController {
     private final TradeMasterService tradeMasterService;
     private final SearchHistoryService searchHistoryService;
-
-    @GetMapping(value="/search")
-    public String index(
-            @ModelAttribute SearchVO searchVO) throws JsonProcessingException {
-        log.info(">> searchVo :: " + searchVO);
-        return tradeMasterService.fetchAll(searchVO);
-    }
 
     @PostMapping(value = "/history")
     public void history(

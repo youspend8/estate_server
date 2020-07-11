@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value="/trade")
 @CrossOrigin("*")
@@ -17,18 +19,20 @@ public class TradeController {
     private final TradeMasterService tradeMasterService;
 
     @GetMapping(value = "/search")
-    public ResponseEntity<String> search(
+    public ResponseEntity<Map<String, Object>> search(
             @ModelAttribute SearchVO searchVO) throws JsonProcessingException {
         log.info(">> searchVo :: " + searchVO);
 
-        return ResponseEntity.ok(tradeMasterService.fetchAll(searchVO));
+        return ResponseEntity
+                .ok(tradeMasterService.fetchAll(searchVO));
     }
 
     @GetMapping(value = "/stats")
-    public ResponseEntity<String> stats(
+    public ResponseEntity<Map<String, Object>> stats(
             @ModelAttribute SearchVO searchVO) throws JsonProcessingException {
         log.info(">> searchVo :: " + searchVO);
 
-        return ResponseEntity.ok(tradeMasterService.priceByPyung(searchVO));
+        return ResponseEntity
+                .ok(tradeMasterService.priceByPyung(searchVO));
     }
 }
