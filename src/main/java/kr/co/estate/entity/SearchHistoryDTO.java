@@ -29,4 +29,9 @@ public class SearchHistoryDTO {
 
     @Column(name = "CREATE_DATE")
     private Date createDate;
+
+    @Override
+    public int hashCode() {
+        return this.keyword.hashCode();
+    }
 }
