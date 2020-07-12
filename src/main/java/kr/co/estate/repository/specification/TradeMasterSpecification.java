@@ -16,13 +16,27 @@ public class TradeMasterSpecification {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicate = new ArrayList<>();
             if (searchVO.getName() != null && !searchVO.getName().equals("")) {
-                predicate.add(criteriaBuilder.equal(root.get("name"), searchVO.getName()));
+                predicate.add(criteriaBuilder.like(root.get("name"), "%" + searchVO.getName() + "%"));
             }
             String region = searchVO.getRegion();
             String sigungu = searchVO.getSigungu();
 
             predicate.add(criteriaBuilder.equal(root.get("regionCode"), region + sigungu));
-            predicate.add(criteriaBuilder.equal(root.get("tradeType"), TradeType.APARTMENT_TRADE));
+            if (searchVO.getStartDate() != null && !searchVO.getStartDate().equals("")) {
+                String startDate = searchVO.getStartDate();
+                String endDate = searchVO.getEndDate();
+                predicate.add(criteriaBuilder.between(root.get("dealYear"),
+                        Integer.parseInt(startDate.split("-")[0]), Integer.parseInt(endDate.split("-")[0])));
+                predicate.add(criteriaBuilder.between(root.get("dealMonth"),
+                        Integer.parseInt(startDate.split("-")[1]), Integer.parseInt(endDate.split("-")[1])));
+            }
+            if (searchVO.getTradeType() != null && !searchVO.getTradeType().equals("")) {
+                if (searchVO.getTradeType().equals("trade")) {
+                    predicate.add(criteriaBuilder.equal(root.get("tradeType"), TradeType.APARTMENT_TRADE));
+                } else if (searchVO.getTradeType().equals("rent")) {
+                    predicate.add(criteriaBuilder.equal(root.get("tradeType"), TradeType.APARTMENT_RENT));
+                }
+            }
             return criteriaBuilder.and(predicate.toArray(new Predicate[0]));
         };
     }

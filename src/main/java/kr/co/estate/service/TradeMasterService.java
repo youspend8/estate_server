@@ -92,6 +92,7 @@ public class TradeMasterService {
                 .distinct()
                 .count();
     }
+
     private double getPriceAverage(List<TradeMasterDTO> list, String dong) {
         return list.stream().filter(x -> x.getDong().equals(dong))
                 .distinct()

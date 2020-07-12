@@ -15,4 +15,7 @@ public class SearchVO {
     private int size;
     private String sortType;
     private String sortMode;
+    private String tradeType;
+    private String startDate;
+    private String endDate;
 }
