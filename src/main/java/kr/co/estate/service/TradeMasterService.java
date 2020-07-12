@@ -1,6 +1,5 @@
 package kr.co.estate.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.co.estate.entity.SearchVO;
 import kr.co.estate.entity.TradeMasterDTO;
 import kr.co.estate.repository.TradeMasterRepository;
@@ -10,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +17,7 @@ import java.util.stream.Collectors;
 public class TradeMasterService {
     private final TradeMasterRepository tradeMasterRepository;
 
-    public Map<String, Object> fetchAll(SearchVO searchVO) throws JsonProcessingException {
+    public Map<String, Object> fetchAll(SearchVO searchVO) {
         Page<TradeMasterDTO> page = tradeMasterRepository
                 .findAll(TradeMasterSpecification.searchBy(searchVO),
                         PageRequest.of(searchVO.getPage() - 1, searchVO.getSize(), TradeMasterSpecification.sortBy(searchVO)));
@@ -35,9 +31,9 @@ public class TradeMasterService {
     /**
      * 평당가 제공
      * @param searchVO
-     * @return
+     * @return Map<String, Object> result
      */
-    public Map<String, Object> priceByPyung(SearchVO searchVO) throws JsonProcessingException {
+    public Map<String, Object> priceByPyung(SearchVO searchVO) {
         List<TradeMasterDTO> list = tradeMasterRepository
                 .findAll(TradeMasterSpecification.searchBy(searchVO));
 
@@ -57,6 +53,28 @@ public class TradeMasterService {
         result.put("priceAvg", returnList.stream().mapToDouble(x -> (double) x.get("price")).average());
         result.put("countSum", returnList.stream().mapToLong(x -> (long) x.get("count")).sum());
 
+        return result;
+    }
+
+    /**
+     * 월별 거래건수
+     * @param searchVO
+     * @return Map<String, Object> result
+     */
+    public Map<String, Object> countByMonth(SearchVO searchVO) {
+        List<TradeMasterDTO> list = tradeMasterRepository
+                .findAll(TradeMasterSpecification.searchBy(searchVO));
+
+        Map<String, Long> map = list.stream()
+                .collect(Collectors.groupingBy(x ->
+                                x.getDealYear() + (x.getDealMonth() < 10 ? "0" : "") + x.getDealMonth(),
+                        Collectors.counting()));
+
+        List<Map.Entry<String, Long>> entryList = new ArrayList<>(map.entrySet());
+        entryList.sort(Comparator.comparingLong(x -> Long.parseLong(x.getKey())));
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", entryList);
         return result;
     }
 
