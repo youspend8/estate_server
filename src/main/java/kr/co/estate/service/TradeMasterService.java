@@ -25,6 +25,7 @@ public class TradeMasterService {
         Map<String, Object> result = new HashMap<>();
         result.put("list", page.toList());
         result.put("totalPage", page.getTotalPages());
+        result.put("listType", searchVO.getTradeType());
         return result;
     }
 
