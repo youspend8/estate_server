@@ -35,4 +35,13 @@ public class TradeController {
         return ResponseEntity
                 .ok(tradeMasterService.priceByPyung(searchVO));
     }
+
+    @GetMapping(value = "/count/month")
+    public ResponseEntity<Map<String, Object>> countByMonth(
+            @ModelAttribute SearchVO searchVO) {
+        log.info(">> searchVo :: " + searchVO);
+
+        return ResponseEntity
+                .ok(tradeMasterService.countByMonth(searchVO));
+    }
 }

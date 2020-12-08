@@ -1,12 +1,10 @@
 package kr.co.estate.entity;
 
 import kr.co.estate.common.TradeType;
+import kr.co.estate.entity.embed.Coordinates;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -55,6 +53,8 @@ public class TradeMasterDTO {
     private String name;
     @Column(name="VILLA_TYPE")
     private String villaType;
+    @Embedded
+    private Coordinates coordinates;
 
     public long amountByPyung() {
         return Math.round((this.getAmount()) / (this.getArea() / 3.3));
