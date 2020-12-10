@@ -1,10 +1,10 @@
 package kr.co.estate.entity;
 
 import kr.co.estate.common.TradeType;
+import kr.co.estate.entity.embedded.Coordinate;
 import kr.co.estate.entity.embedded.Deal;
 import kr.co.estate.entity.embedded.Location;
 import lombok.*;
-import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -52,8 +52,8 @@ public class TradeMasterEntity {
     @Column(name = "CREATE_DATE", nullable = false)
     private LocalDateTime createAt;
 
-    @Column(name = "COORDINATE", nullable = false)
-    private Point point;
+    @Embedded
+    private Coordinate coordinate;
 
     @Embedded
     private Deal deal;
