@@ -1,6 +1,7 @@
 package kr.co.estate.service;
 
 import kr.co.estate.dto.NaverMapDto;
+import kr.co.estate.dto.city.CityDto;
 import kr.co.estate.entity.CityCodeEntity;
 import kr.co.estate.repository.CityCodeRepository;
 import kr.co.estate.repository.specification.CityCodeSpecification;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class CityCodeService {
                 CityCodeSpecification.searchBy(params));
     }
 
-    public List<CityCodeEntity> fetchCoords(NaverMapDto naverMapDto) {
+    public List<CityDto> fetchCoords(NaverMapDto naverMapDto) {
         int type = 0;
         if (naverMapDto.getZoom() >= 9) {
             type = 1;
@@ -31,6 +33,8 @@ public class CityCodeService {
         if (naverMapDto.getZoom() >= 16) {
             type = 3;
         }
-        return cityCodeRepository.findByType(type);
+        return cityCodeRepository.findByType(type).stream()
+                .map(CityDto::from)
+                .collect(Collectors.toList());
     }
 }

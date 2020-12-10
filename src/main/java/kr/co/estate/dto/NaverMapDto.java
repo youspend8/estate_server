@@ -15,6 +15,6 @@ public class NaverMapDto {
     @ApiParam(value = "경도", example = "124.552394722", required = true)
     private double lon;
     
-    @ApiParam(value = "지도 줌 레벨", example = "13", required = true)
+    @ApiParam(value = "지도 줌 레벨", example = "6", required = true)
     private int zoom;
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value="/v1/api", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
