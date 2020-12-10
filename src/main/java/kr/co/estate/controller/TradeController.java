@@ -1,25 +1,28 @@
 package kr.co.estate.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.Api;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
 import kr.co.estate.service.TradeMasterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-@RequestMapping(value="/trade")
+@RequestMapping(value="/v1/api", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
+@Api(tags = "실거래 데이터")
 public class TradeController {
     private final TradeMasterService tradeMasterService;
 
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/trade/search")
     public ResponseEntity<Map<String, Object>> search(
             @ModelAttribute SearchDto searchDto) throws JsonProcessingException {
         log.info("searchDto ==> {}", searchDto);
@@ -28,7 +31,7 @@ public class TradeController {
                 .ok(tradeMasterService.fetchAll(searchDto));
     }
 
-    @GetMapping(value = "/stats")
+    @GetMapping(value = "/trade/stats")
     public ResponseEntity<Map<String, Object>> stats(
             @ModelAttribute SearchDto searchDto) throws JsonProcessingException {
         log.info("searchDto ==> {}", searchDto);
@@ -37,7 +40,7 @@ public class TradeController {
                 .ok(tradeMasterService.priceByPyung(searchDto));
     }
 
-    @GetMapping(value = "/aggregate")
+    @GetMapping(value = "/trade/aggregate")
     public ResponseEntity<?> aggregate(
             @ModelAttribute NaverMapDto naverMapDto) {
         log.debug("coordinatesDto ==> {}", naverMapDto);
