@@ -1,6 +1,6 @@
 package kr.co.estate.repository.specification;
 
-import kr.co.estate.entity.CityCodeDTO;
+import kr.co.estate.entity.CityCodeEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CityCodeSpecification {
 
-    public static Specification<CityCodeDTO> searchBy(Map<String, Object> params) {
+    public static Specification<CityCodeEntity> searchBy(Map<String, Object> params) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicate = new ArrayList<>();
 

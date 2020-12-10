@@ -1,0 +1,23 @@
+
+spring:
+  datasource.driver-class-name: org.mariadb.jdbc.Driver
+  datasource.url: jdbc:mariadb://${ESTATE_DATASOURCE_URL}/ESTATE
+  datasource.username: ${ESTATE_DATASOURCE_USERNAME}
+  datasource.password: ${ESTATE_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database: mysql
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
+    
+logging.level:
+  kr.co.estate: DEBUG
+  org.hibernate.type: INFO
+  org.hibernate.SQL: INFO
+
+server:
+  port: 8000
+  servlet:
+    context-path: /estate

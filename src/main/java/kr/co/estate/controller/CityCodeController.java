@@ -1,6 +1,7 @@
 package kr.co.estate.controller;
 
-import kr.co.estate.entity.CityCodeDTO;
+import kr.co.estate.dto.NaverMapDto;
+import kr.co.estate.entity.CityCodeEntity;
 import kr.co.estate.service.CityCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,19 @@ public class CityCodeController {
     private final CityCodeService cityCodeService;
 
     @GetMapping(value = "/search")
-    public ResponseEntity<List<CityCodeDTO>> search(
+    public ResponseEntity<List<CityCodeEntity>> search(
             @RequestParam Map<String, Object> params) {
+        log.debug("params ==> {}", params);
+
         return ResponseEntity.ok(cityCodeService.fetch(params));
+}
+
+    @GetMapping(value = "/search/coords")
+    public ResponseEntity<?> coords(
+            @ModelAttribute NaverMapDto naverMapDto) {
+        log.debug("coordinatesDto ==> {}", naverMapDto);
+
+        return ResponseEntity
+                .ok(cityCodeService.fetchCoords(naverMapDto));
     }
 }
