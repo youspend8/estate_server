@@ -20,3 +20,6 @@ server:
   port: 8000
   servlet:
     context-path: /estate
+
+mybatis:
+  type-aliases-package: kr.co.estate.entity
