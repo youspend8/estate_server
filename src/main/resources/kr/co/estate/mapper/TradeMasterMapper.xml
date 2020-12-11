@@ -3,25 +3,15 @@
 
 <mapper namespace="kr.co.estate.mapper.TradeMasterMapper">
     <select id="aggregateByCity" resultType="hashMap">
-        SELECT 		CC.COD_ID
-                 ,  CC.CD_TYPE
-                 ,  CC.CD_NAME
-                 ,  CC.REGION_CD
-                 ,  CC.SIGUNGU_CD
-                 ,  CC.UMD_CD
-                 ,  CC.FULLNAME
-                 ,  CC.LONGITUDE
-                 ,  CC.LATITUDE
-                 , 	AVG(AMOUNT) AS AMOUNT_AVG
-                 , 	COUNT(*) AS TRADE_COUNT
-        FROM 		TRADE_MASTER TM
-        INNER JOIN (
-            SELECT 	*
-            FROM 	CITY_CODE
-            WHERE 	CD_TYPE = #{type}
-            AND 	LATITUDE BETWEEN #{naverMapDto.southLat} AND #{naverMapDto.northLat}
-            AND 	LONGITUDE BETWEEN #{naverMapDto.westLong} AND #{naverMapDto.eastLong}
-        ) CC ON	    TM.REGION_CD = CC.REGION_CD
-        GROUP BY    TM.REGION_CD
+        SELECT STRAIGHT_JOIN    CC.*
+                           , 	AVG(AMOUNT) AS AMOUNT_AVG
+                           , 	COUNT(*) AS TRADE_COUNT
+        FROM 		CITY_CODE CC
+        INNER JOIN 	TRADE_MASTER TM ON CC.REGION_CD = TM.REGION_CD
+        WHERE 	    CD_TYPE = #{type}
+        AND 	    LATITUDE BETWEEN #{naverMapDto.southLat} AND #{naverMapDto.northLat}
+        AND 	    LONGITUDE BETWEEN #{naverMapDto.westLong} AND #{naverMapDto.eastLong}
+        GROUP BY 	CC.REGION_CD
+        ORDER BY 	NULL
     </select>
 </mapper>

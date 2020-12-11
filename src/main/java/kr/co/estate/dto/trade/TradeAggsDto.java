@@ -16,9 +16,9 @@ import java.util.Map;
 public class TradeAggsDto {
     private String name;
     private int type;
-    private int regionCode;
-    private int sigunguCode;
-    private int umdCode;
+    private String regionCode;
+    private String sigunguCode;
+    private String umdCode;
     private String fullname;
     private double amountAverage;
     private long count;
@@ -28,9 +28,9 @@ public class TradeAggsDto {
         return TradeAggsDto.builder()
                 .name(map.get("CD_NAME").toString())
                 .type((int) map.get("CD_TYPE"))
-                .regionCode((int) map.get("REGION_CD"))
-                .sigunguCode((int) map.get("SIGUNGU_CD"))
-                .umdCode((int) map.get("UMD_CD"))
+                .regionCode((String) map.get("REGION_CD"))
+                .sigunguCode((String) map.get("SIGUNGU_CD"))
+                .umdCode((String) map.get("UMD_CD"))
                 .fullname(map.get("FULLNAME").toString())
                 .amountAverage(((BigDecimal) map.get("AMOUNT_AVG")).doubleValue())
                 .count((long) map.get("TRADE_COUNT"))
