@@ -2,8 +2,11 @@ package kr.co.estate.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import kr.co.estate.constants.SwaggerApiInfo;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.trade.TradeAggsDto;
 import kr.co.estate.service.TradeMasterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/v1/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
@@ -41,11 +45,12 @@ public class TradeController {
     }
 
     @GetMapping(value = "/trade/aggregate")
-    public ResponseEntity<?> aggregate(
+    @ApiOperation(value = SwaggerApiInfo.TRADE_AGGREGATE_VALUE, notes = SwaggerApiInfo.TRADE_AGGREGATE_NOTES)
+    public ResponseEntity<ApiResponse<List<TradeAggsDto>>> aggregate(
             @ModelAttribute NaverMapDto naverMapDto) {
         log.debug("coordinatesDto ==> {}", naverMapDto);
 
-        return ResponseEntity
-                .ok(tradeMasterService.aggregate(naverMapDto));
+        return ResponseEntity.ok(
+                ApiResponse.valueOf(tradeMasterService.aggregate(naverMapDto)));
     }
 }

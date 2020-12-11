@@ -3,7 +3,9 @@ package kr.co.estate.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.trade.TradeAggsDto;
 import kr.co.estate.entity.TradeMasterEntity;
+import kr.co.estate.mapper.TradeMasterMapper;
 import kr.co.estate.repository.TradeMasterRepository;
 import kr.co.estate.repository.specification.TradeMasterSpecification;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TradeMasterService {
     private final TradeMasterRepository tradeMasterRepository;
+    private final TradeMasterMapper tradeMasterMapper;
 
     @Transactional(readOnly = true)
-    public List<TradeMasterEntity> aggregate(NaverMapDto naverMapDto) {
-
-        return tradeMasterRepository.findAllByCoordinate(naverMapDto.getLat(), naverMapDto.getLon());
+    public List<TradeAggsDto> aggregate(NaverMapDto naverMapDto) {
+        return tradeMasterMapper.aggregateByCity(naverMapDto.typeByZoom(), naverMapDto)
+                .stream()
+                .map(TradeAggsDto::valueOf)
+                .collect(Collectors.toList());
     }
 
     public Map<String, Object> fetchAll(SearchDto searchDto) throws JsonProcessingException {

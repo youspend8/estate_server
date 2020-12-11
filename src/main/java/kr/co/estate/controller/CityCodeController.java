@@ -2,6 +2,7 @@ package kr.co.estate.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kr.co.estate.constants.SwaggerApiInfo;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.city.CityDto;
 import kr.co.estate.entity.CityCodeEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/v1/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @Slf4j
@@ -25,21 +26,22 @@ public class CityCodeController {
     private final CityCodeService cityCodeService;
 
     @GetMapping(value = "/city/search")
+    @ApiOperation(value = SwaggerApiInfo.TRADE_CITY_SEARCH_VALUE, notes = SwaggerApiInfo.TRADE_CITY_SEARCH_NOTES)
+    public ResponseEntity<ApiResponse<List<CityDto>>> coords(
+            @ModelAttribute NaverMapDto naverMapDto) {
+        log.debug("coordinatesDto ==> {}", naverMapDto);
+
+        return ResponseEntity.ok(
+                ApiResponse.valueOf(cityCodeService.search(naverMapDto)));
+    }
+
+    @GetMapping(value = "/city/search/type")
     public ResponseEntity<ApiResponse<List<CityCodeEntity>>> search(
             @RequestParam Map<String, Object> params) {
         log.debug("params ==> {}", params);
 
         return ResponseEntity.ok(
                 ApiResponse.valueOf(cityCodeService.fetch(params)));
-}
-
-    @GetMapping(value = "/city/search/coords")
-    @ApiOperation(value = "지역 목록 조회", notes = "특정 좌표(위도, 경도)를 기준으로 Zoom Level에 따라 허용 거리에 포함되는 지역 목록 조회")
-    public ResponseEntity<ApiResponse<List<CityDto>>> coords(
-            @ModelAttribute NaverMapDto naverMapDto) {
-        log.debug("coordinatesDto ==> {}", naverMapDto);
-
-        return ResponseEntity.ok(
-                ApiResponse.valueOf(cityCodeService.fetchCoords(naverMapDto)));
     }
+
 }

@@ -19,7 +19,7 @@ public class Swagger2FoxConfiguration {
                 .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("kr.co.estate.controller"))
-                .paths(PathSelectors.ant("/v1/api/**"))
+                .paths(PathSelectors.ant("/api/v1/**"))
                 .build()
                 .apiInfo(new ApiInfoBuilder()
                         .title("v1")
