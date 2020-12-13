@@ -9,8 +9,8 @@
         FROM 		CITY_CODE CC
         INNER JOIN 	TRADE_MASTER TM ON CC.REGION_CD = TM.REGION_CD
         WHERE 	    CD_TYPE = #{type}
-        AND 	    LATITUDE BETWEEN #{naverMapDto.southLat} AND #{naverMapDto.northLat}
-        AND 	    LONGITUDE BETWEEN #{naverMapDto.westLong} AND #{naverMapDto.eastLong}
+        AND 	    CC.LATITUDE BETWEEN #{naverMapDto.southLat} AND #{naverMapDto.northLat}
+        AND 	    CC.LONGITUDE BETWEEN #{naverMapDto.westLong} AND #{naverMapDto.eastLong}
         GROUP BY 	CC.REGION_CD
         ORDER BY 	NULL
     </select>
