@@ -37,5 +37,17 @@ public class TradeAggsDto {
                 .coordinate(CoordinateDto.of((BigDecimal) map.get("LONGITUDE"), (BigDecimal) map.get("LATITUDE")))
                 .build();
     }
+
+    /**
+     * 경도(longitude)가 지도 영역 상 좌측(right) 및 우측(left)에 해당되는지 확인
+     * @param top 영역 기준 상단 위도
+     * @param bottom 영역 기준 하단 위도
+     * @param left 영역 기준 좌측 경도
+     * @param right 영역 기준 우측 경도
+     * @return 영역 안에 위치하는가 ?
+     */
+    public boolean isContainArea(double top, double bottom, double left, double right) {
+        return coordinate.isContainAreaX(left, right) && coordinate.isContainAreaY(top, bottom);
+    }
 }
 
