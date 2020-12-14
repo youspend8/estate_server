@@ -1,6 +1,9 @@
 package kr.co.estate.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.estate.config.properties.JsonFilesProperties;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
 import kr.co.estate.dto.trade.TradeAggsDto;
@@ -14,10 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,10 +27,26 @@ import java.util.stream.Collectors;
 public class TradeMasterService {
     private final TradeMasterRepository tradeMasterRepository;
     private final TradeMasterMapper tradeMasterMapper;
+    private final ObjectMapper objectMapper;
+    private final JsonFilesProperties jsonFilesProperties;
+
+    public List<TradeAggsDto> aggregateJson(NaverMapDto naverMapDto) {
+        List<TradeAggsDto> list = new ArrayList<>();
+        try {
+            list = objectMapper.readValue(new File(
+                    jsonFilesProperties.getAggregationPath(naverMapDto.typeByZoom())), new TypeReference<List<TradeAggsDto>>() {});
+        } catch (IOException e) {
+            // TODO : throw custom exception
+        }
+        return list.stream()
+                .filter(x -> x.isContainArea(naverMapDto.getNorthLat(), naverMapDto.getSouthLat(), naverMapDto.getWestLong(), naverMapDto.getEastLong()))
+                .collect(Collectors.toList());
+    }
 
     @Transactional(readOnly = true)
     public List<TradeAggsDto> aggregate(NaverMapDto naverMapDto) {
         return tradeMasterMapper.aggregateByCity(naverMapDto.typeByZoom(), naverMapDto)
+//        return tradeMasterMapper.aggregateByCity(3, naverMapDto)
                 .stream()
                 .map(TradeAggsDto::valueOf)
                 .collect(Collectors.toList());

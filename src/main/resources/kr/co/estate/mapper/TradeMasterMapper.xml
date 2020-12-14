@@ -7,11 +7,18 @@
                            , 	AVG(AMOUNT) AS AMOUNT_AVG
                            , 	COUNT(*) AS TRADE_COUNT
         FROM 		CITY_CODE CC
-        INNER JOIN 	TRADE_MASTER TM ON CC.REGION_CD = TM.REGION_CD
+        INNER JOIN 	TRADE_MASTER TM
+        ON 			CC.REGION_CD = TM.REGION_CD
+        <if test="type >= 1">
+            AND 		CC.SIGUNGU_CD = TM.SIGUNGU_CD
+        </if>
+        <if test="type >= 2">
+            AND			CC.UMD_CD = TM.UMD_CD
+        </if>
         WHERE 	    CD_TYPE = #{type}
         AND 	    CC.LATITUDE BETWEEN #{naverMapDto.southLat} AND #{naverMapDto.northLat}
         AND 	    CC.LONGITUDE BETWEEN #{naverMapDto.westLong} AND #{naverMapDto.eastLong}
-        GROUP BY 	CC.REGION_CD
+        GROUP BY 	CC.VALUE
         ORDER BY 	NULL
     </select>
 </mapper>

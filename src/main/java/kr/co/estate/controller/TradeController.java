@@ -48,9 +48,13 @@ public class TradeController {
     @ApiOperation(value = SwaggerApiInfo.TRADE_AGGREGATE_VALUE, notes = SwaggerApiInfo.TRADE_AGGREGATE_NOTES)
     public ResponseEntity<ApiResponse<List<TradeAggsDto>>> aggregate(
             @ModelAttribute NaverMapDto naverMapDto) {
-        log.debug("coordinatesDto ==> {}", naverMapDto);
+        log.debug("GET /trade/aggregate :: request ==> coordinatesDto : {}", naverMapDto);
+
+        List<TradeAggsDto> result = tradeMasterService.aggregateJson(naverMapDto);
+
+        log.debug("GET /trade/aggregate :: response ==> {}", result);
 
         return ResponseEntity.ok(
-                ApiResponse.valueOf(tradeMasterService.aggregate(naverMapDto)));
+                ApiResponse.valueOf(tradeMasterService.aggregateJson(naverMapDto)));
     }
 }
