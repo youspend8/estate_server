@@ -35,15 +35,15 @@ public class NaverMapDto {
      * @return CityCode Type
      */
     public int typeByZoom() {
-        if (getZoom() >= 9) {
-            return 1;
-        }
-        if (getZoom() >= 13) {
-            return 2;
-        }
 //        if (getZoom() >= 17) {
 //            return 3;
 //        }
+        if (getZoom() >= 13) {
+            return 2;
+        }
+        if (getZoom() >= 9) {
+            return 1;
+        }
         return 0;
     }
 }
