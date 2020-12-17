@@ -2,7 +2,7 @@ package kr.co.estate.common;
 
 public enum TradeType {
     APARTMENT_TRADE,
-    APARTMENT_RENT, //  http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent
+    APARTMENT_RENT,
     OFFICE_TRADE,
     OFFICE_RENT,
     VILLA_TRADE,

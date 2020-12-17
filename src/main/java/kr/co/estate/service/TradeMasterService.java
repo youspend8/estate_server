@@ -51,7 +51,6 @@ public class TradeMasterService {
     @Transactional(readOnly = true)
     public List<TradeAggsDto> aggregate(NaverMapDto naverMapDto) {
         return tradeMasterMapper.aggregateByCity(naverMapDto.typeByZoom(), naverMapDto)
-//        return tradeMasterMapper.aggregateByCity(3, naverMapDto)
                 .stream()
                 .map(TradeAggsDto::valueOf)
                 .collect(Collectors.toList());
