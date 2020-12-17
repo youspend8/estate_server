@@ -1,25 +1,28 @@
 package kr.co.estate.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.estate.config.properties.JsonFilesProperties;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.trade.NaverMapFilterDto;
 import kr.co.estate.dto.trade.TradeAggsDto;
+import kr.co.estate.dto.trade.TradeSearchDto;
+import kr.co.estate.dto.trade.TradeStatsDto;
+import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
 import kr.co.estate.entity.TradeMasterEntity;
 import kr.co.estate.mapper.TradeMasterMapper;
 import kr.co.estate.repository.TradeMasterRepository;
-import kr.co.estate.repository.specification.TradeMasterSpecification;
+import kr.co.estate.repository.querydsl.TradeMasterRepositorySupport;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,12 +32,14 @@ public class TradeMasterService {
     private final TradeMasterMapper tradeMasterMapper;
     private final ObjectMapper objectMapper;
     private final JsonFilesProperties jsonFilesProperties;
+    private final TradeMasterRepositorySupport tradeMasterRepositorySupport;
 
-    public List<TradeAggsDto> aggregateJson(NaverMapDto naverMapDto) {
+    public List<TradeAggsDto> aggregateJson(NaverMapDto naverMapDto, NaverMapFilterDto naverMapFilterDto) {
         List<TradeAggsDto> list = new ArrayList<>();
         try {
             list = objectMapper.readValue(new File(
-                    jsonFilesProperties.getAggregationPath(naverMapDto.typeByZoom())), new TypeReference<List<TradeAggsDto>>() {});
+                    jsonFilesProperties.getAggregationPath(
+                            naverMapDto.typeByZoom(), naverMapFilterDto.getTradeType())), new TypeReference<List<TradeAggsDto>>() {});
         } catch (IOException e) {
             // TODO : throw custom exception
         }
@@ -52,51 +57,39 @@ public class TradeMasterService {
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Object> fetchAll(SearchDto searchDto) throws JsonProcessingException {
-        Page<TradeMasterEntity> page = tradeMasterRepository
-                .findAll(TradeMasterSpecification.searchBy(searchDto),
-                        PageRequest.of(searchDto.getPage() - 1, searchDto.getSize(), TradeMasterSpecification.sortBy(searchDto)));
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", page.toList());
-        result.put("totalPage", page.getTotalPages());
-        return result;
+    @Transactional(readOnly = true)
+    public List<TradeSearchDto> search(SearchDto searchDto) {
+        return tradeMasterRepositorySupport.findBySearchQuery(searchDto, true)
+                .stream()
+                .map(TradeSearchDto::valueOf)
+                .collect(Collectors.toList());
     }
 
-    /**
-     * 평당가 제공
-     * @param searchDto
-     * @return
-     */
-    public Map<String, Object> priceByPyung(SearchDto searchDto) throws JsonProcessingException {
-        List<TradeMasterEntity> list = tradeMasterRepository
-                .findAll(TradeMasterSpecification.searchBy(searchDto));
+    @Transactional(readOnly = true)
+    public TradeStatsDto stats(SearchDto searchDto) {
+        List<TradeMasterEntity> list =
+                tradeMasterRepositorySupport.findBySearchQuery(searchDto, false);
 
         List<String> dongList = list.stream()
                 .map(entity -> entity.getLocation().getDong())
                 .distinct()
                 .collect(Collectors.toList());
 
-        List<HashMap<String, Object>> returnList = dongList.stream()
-                .map(x -> this.convertMap(list, x))
-                .sorted(Comparator.comparingDouble((HashMap<String, Object> x) ->
-                        (double) x.get("price")).reversed())
+        List<TradeStatsCityDto> returnList = dongList.stream()
+                .map(x -> TradeStatsCityDto.of(x, getPriceAverage(list, x), getTradeCount(list, x)))
+                .sorted(Comparator.comparingDouble(TradeStatsCityDto::getPrice).reversed())
                 .collect(Collectors.toList());
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", returnList);
-        result.put("priceAvg", returnList.stream().mapToDouble(x -> (double) x.get("price")).average());
-        result.put("countSum", returnList.stream().mapToLong(x -> (long) x.get("count")).sum());
-
-        return result;
-    }
-
-    private HashMap<String, Object> convertMap(List<TradeMasterEntity> list, String dong) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("dong", dong);
-        map.put("price", this.getPriceAverage(list, dong));
-        map.put("count", this.getTradeCount(list, dong));
-        return map;
+        return TradeStatsDto.builder()
+                .cityList(returnList)
+                .priceAverage(returnList.stream()
+                        .mapToDouble(TradeStatsCityDto::getPrice)
+                        .average()
+                        .orElse(0))
+                .countSum(returnList.stream()
+                        .mapToLong(TradeStatsCityDto::getCount)
+                        .sum())
+                .build();
     }
 
     private long getTradeCount(List<TradeMasterEntity> list, String dong) {
@@ -106,7 +99,8 @@ public class TradeMasterService {
                 .count();
     }
     private double getPriceAverage(List<TradeMasterEntity> list, String dong) {
-        return list.stream().filter(entity -> entity.getLocation().getDong().equals(dong))
+        return list.stream()
+                .filter(entity -> entity.getLocation().getDong().equals(dong))
                 .distinct()
                 .mapToLong(TradeMasterEntity::amountByPyung)
                 .average()

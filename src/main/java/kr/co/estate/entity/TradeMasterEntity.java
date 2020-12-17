@@ -61,8 +61,8 @@ public class TradeMasterEntity {
     @Embedded
     private Location location;
 
-    @Column(name = "DISTANCE", insertable = false, updatable = false)
-    private Double distance;
+//    @Column(name = "DISTANCE", insertable = false, updatable = false)
+//    private Double distance;
 
     public long amountByPyung() {
         return Math.round((this.getAmount()) / (this.getArea() / 3.3));

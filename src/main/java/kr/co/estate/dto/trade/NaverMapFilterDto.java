@@ -1,4 +1,4 @@
-package kr.co.estate.dto;
+package kr.co.estate.dto.trade;
 
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
@@ -8,15 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class SearchDto {
-    private String name;
-    private String region;
-    private String sigungu;
-    private int page;
-    private int size;
-    private String sortType;
-    private String sortMode;
-
+public class NaverMapFilterDto {
     @ApiParam(value = "거래 유형", example = "TRADE", required = true)
     private String tradeType;
 }

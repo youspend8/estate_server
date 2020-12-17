@@ -6,6 +6,8 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import java.time.LocalDate;
+
 @Getter
 @ToString
 @ConstructorBinding
@@ -15,7 +17,7 @@ public class JsonFilesProperties {
     private final String basePath;
     private final String aggregation;
 
-    public String getAggregationPath(int type) {
-        return String.format("%s/%s/%d.json", basePath, aggregation, type);
+    public String getAggregationPath(int type, String tradeType) {
+        return String.format("%s/%s/%s/%d_%s.json", basePath, aggregation, LocalDate.now(), type, tradeType);
     }
 }
