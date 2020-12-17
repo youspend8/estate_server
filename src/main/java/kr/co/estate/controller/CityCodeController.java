@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.estate.constants.SwaggerApiInfo;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.city.CityDto;
-import kr.co.estate.entity.CityCodeEntity;
 import kr.co.estate.service.CityCodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,14 +32,4 @@ public class CityCodeController {
         return ResponseEntity.ok(
                 ApiResponse.valueOf(cityCodeService.search(naverMapDto)));
     }
-
-    @GetMapping(value = "/city/search/type")
-    public ResponseEntity<ApiResponse<List<CityCodeEntity>>> search(
-            @RequestParam Map<String, Object> params) {
-        log.debug("params ==> {}", params);
-
-        return ResponseEntity.ok(
-                ApiResponse.valueOf(cityCodeService.fetch(params)));
-    }
-
 }
