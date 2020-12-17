@@ -13,7 +13,6 @@ import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
 import kr.co.estate.entity.TradeMasterEntity;
 import kr.co.estate.entity.collection.TradeMasterEntities;
 import kr.co.estate.mapper.TradeMasterMapper;
-import kr.co.estate.repository.TradeMasterRepository;
 import kr.co.estate.repository.querydsl.TradeMasterRepositorySupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TradeMasterService {
-    private final TradeMasterRepository tradeMasterRepository;
+public class TradeServiceImpl implements TradeService {
     private final TradeMasterMapper tradeMasterMapper;
     private final ObjectMapper objectMapper;
     private final JsonFilesProperties jsonFilesProperties;
     private final TradeMasterRepositorySupport tradeMasterRepositorySupport;
 
+    @Override
     public List<TradeAggsDto> aggregateJson(NaverMapDto naverMapDto, NaverMapFilterDto naverMapFilterDto) {
         List<TradeAggsDto> list = new ArrayList<>();
         try {
@@ -49,22 +48,27 @@ public class TradeMasterService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public List<TradeAggsDto> aggregate(NaverMapDto naverMapDto) {
-        return tradeMasterMapper.aggregateByCity(naverMapDto.typeByZoom(), naverMapDto)
+    public List<TradeAggsDto> aggregate(NaverMapDto naverMapDto, NaverMapFilterDto naverMapFilterDto) {
+        return tradeMasterMapper
+                .aggregateByCity(naverMapDto.typeByZoom(), naverMapDto)
                 .stream()
                 .map(TradeAggsDto::valueOf)
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<TradeSearchDto> search(SearchDto searchDto) {
-        return tradeMasterRepositorySupport.findBySearchQuery(searchDto, true)
+        return tradeMasterRepositorySupport
+                .findBySearchQuery(searchDto, true)
                 .stream()
                 .map(TradeSearchDto::valueOf)
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public TradeStatsDto stats(SearchDto searchDto) {
         List<TradeMasterEntity> list =
@@ -72,9 +76,9 @@ public class TradeMasterService {
 
         TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 
-        List<String> dongList = tradeMasterEntities.getDistinctDong();
-
-        List<TradeStatsCityDto> result = dongList.stream()
+        List<TradeStatsCityDto> result = tradeMasterEntities
+                .getDistinctDong()
+                .stream()
                 .map(x -> TradeStatsCityDto.of(x,
                         tradeMasterEntities.filterDongDistinctAmountAverage(x),
                         tradeMasterEntities.filterDongDistinctCount(x)))

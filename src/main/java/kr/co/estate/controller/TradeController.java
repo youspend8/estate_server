@@ -9,7 +9,7 @@ import kr.co.estate.dto.trade.NaverMapFilterDto;
 import kr.co.estate.dto.trade.TradeAggsDto;
 import kr.co.estate.dto.trade.TradeSearchDto;
 import kr.co.estate.dto.trade.TradeStatsDto;
-import kr.co.estate.service.TradeMasterService;
+import kr.co.estate.service.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "실거래 데이터")
 public class TradeController {
-    private final TradeMasterService tradeMasterService;
+    private final TradeServiceImpl tradeServiceImpl;
 
     @GetMapping(value = "/trade/search")
     @ApiOperation(value = SwaggerApiInfo.TRADE_SEARCH_VALUE, notes = SwaggerApiInfo.TRADE_SEARCH_NOTES)
@@ -33,7 +33,7 @@ public class TradeController {
             @ModelAttribute SearchDto searchDto) {
         log.debug("GET /trade/search :: request ==> searchDto : {}", searchDto);
 
-        List<TradeSearchDto> result = tradeMasterService.search(searchDto);
+        List<TradeSearchDto> result = tradeServiceImpl.search(searchDto);
 
         log.debug("GET /trade/search :: response ==> {}", result);
 
@@ -47,7 +47,7 @@ public class TradeController {
             @ModelAttribute SearchDto searchDto) {
         log.debug("GET /trade/stats :: request ==> searchDto : {}", searchDto);
 
-        TradeStatsDto result = tradeMasterService.stats(searchDto);
+        TradeStatsDto result = tradeServiceImpl.stats(searchDto);
 
         log.debug("GET /trade/stats :: response ==> {}", result);
 
@@ -62,7 +62,7 @@ public class TradeController {
             @ModelAttribute NaverMapFilterDto naverMapFilterDto) {
         log.debug("GET /trade/aggregate :: request ==> coordinatesDto : {}", naverMapDto);
 
-        List<TradeAggsDto> result = tradeMasterService.aggregateJson(naverMapDto, naverMapFilterDto);
+        List<TradeAggsDto> result = tradeServiceImpl.aggregateJson(naverMapDto, naverMapFilterDto);
 
         log.debug("GET /trade/aggregate :: response ==> {}", result);
 
