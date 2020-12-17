@@ -11,6 +11,7 @@ import kr.co.estate.dto.trade.TradeSearchDto;
 import kr.co.estate.dto.trade.TradeStatsDto;
 import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
 import kr.co.estate.entity.TradeMasterEntity;
+import kr.co.estate.entity.collection.TradeMasterEntities;
 import kr.co.estate.mapper.TradeMasterMapper;
 import kr.co.estate.repository.TradeMasterRepository;
 import kr.co.estate.repository.querydsl.TradeMasterRepositorySupport;
@@ -69,40 +70,17 @@ public class TradeMasterService {
         List<TradeMasterEntity> list =
                 tradeMasterRepositorySupport.findBySearchQuery(searchDto, false);
 
-        List<String> dongList = list.stream()
-                .map(entity -> entity.getLocation().getDong())
-                .distinct()
-                .collect(Collectors.toList());
+        TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 
-        List<TradeStatsCityDto> returnList = dongList.stream()
-                .map(x -> TradeStatsCityDto.of(x, getPriceAverage(list, x), getTradeCount(list, x)))
+        List<String> dongList = tradeMasterEntities.getDistinctDong();
+
+        List<TradeStatsCityDto> result = dongList.stream()
+                .map(x -> TradeStatsCityDto.of(x,
+                        tradeMasterEntities.filterDongDistinctAmountAverage(x),
+                        tradeMasterEntities.filterDongDistinctCount(x)))
                 .sorted(Comparator.comparingDouble(TradeStatsCityDto::getPrice).reversed())
                 .collect(Collectors.toList());
 
-        return TradeStatsDto.builder()
-                .cityList(returnList)
-                .priceAverage(returnList.stream()
-                        .mapToDouble(TradeStatsCityDto::getPrice)
-                        .average()
-                        .orElse(0))
-                .countSum(returnList.stream()
-                        .mapToLong(TradeStatsCityDto::getCount)
-                        .sum())
-                .build();
-    }
-
-    private long getTradeCount(List<TradeMasterEntity> list, String dong) {
-        return list.stream()
-                .filter(entity -> entity.getLocation().getDong().equals(dong))
-                .distinct()
-                .count();
-    }
-    private double getPriceAverage(List<TradeMasterEntity> list, String dong) {
-        return list.stream()
-                .filter(entity -> entity.getLocation().getDong().equals(dong))
-                .distinct()
-                .mapToLong(TradeMasterEntity::amountByPyung)
-                .average()
-                .orElse(-1);
+        return TradeStatsDto.valueOf(result);
     }
 }
