@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.estate.config.properties.JsonFilesProperties;
 import kr.co.estate.dto.NaverMapDto;
-import kr.co.estate.dto.query.TradeQuery;
+import kr.co.estate.dto.request.TradeSearchRequestDto;
 import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
+import kr.co.estate.dto.request.TradeStatsRequestDto;
 import kr.co.estate.dto.trade.*;
 import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
 import kr.co.estate.dto.trade.embedded.stats.TradeStatsPeriodItem;
@@ -63,9 +64,9 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradeSearchDto> search(TradeQuery tradeQuery) {
+    public List<TradeSearchDto> search(TradeSearchRequestDto tradeSearchRequestDto) {
         return tradeMasterRepositorySupport
-                .findBySearchQuery(tradeQuery, true)
+                .findBySearchQuery(tradeSearchRequestDto.asQuery())
                 .stream()
                 .map(TradeSearchDto::valueOf)
                 .collect(Collectors.toList());
@@ -73,9 +74,9 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public TradeStatsDto stats(TradeQuery tradeQuery) {
-        List<TradeMasterEntity> list =
-                tradeMasterRepositorySupport.findBySearchQuery(tradeQuery, false);
+    public TradeStatsDto stats(TradeStatsRequestDto tradeStatsRequestDto) {
+        List<TradeMasterEntity> list = tradeMasterRepositorySupport
+                .findBySearchQuery(tradeStatsRequestDto.asQuery());
 
         TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 
@@ -95,7 +96,7 @@ public class TradeServiceImpl implements TradeService {
     @Transactional(readOnly = true)
     public TradeStatsPeriodDto statsPeriod(TradeStatsPeriodRequestDto tradeStatsPeriodRequestDto) {
         List<TradeMasterEntity> list = tradeMasterRepositorySupport
-                .findBySearchQuery(tradeStatsPeriodRequestDto.asQuery(), false);
+                .findBySearchQuery(tradeStatsPeriodRequestDto.asQuery());
 
         TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 

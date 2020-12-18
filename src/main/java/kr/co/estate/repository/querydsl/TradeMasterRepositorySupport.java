@@ -21,7 +21,7 @@ public class TradeMasterRepositorySupport {
     private final QTradeMasterEntity qTradeMasterEntity = QTradeMasterEntity.tradeMasterEntity;
     private final QCityCodeEntity qCityCodeEntity = QCityCodeEntity.cityCodeEntity;
 
-    public List<TradeMasterEntity> findBySearchQuery(TradeQuery tradeQuery, boolean isPaging) {
+    public List<TradeMasterEntity> findBySearchQuery(TradeQuery tradeQuery) {
         JPAQuery<TradeMasterEntity> jpaQuery = jpaQueryFactory.select(qTradeMasterEntity)
                 .from(qTradeMasterEntity);
 
@@ -67,7 +67,7 @@ public class TradeMasterRepositorySupport {
             }
         }
 
-        if (isPaging) {
+        if (tradeQuery.isPaging()) {
             jpaQuery.offset(tradeQuery.getPage() * tradeQuery.getSize())
                     .limit(tradeQuery.getSize());
         }
