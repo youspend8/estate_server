@@ -5,11 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.estate.config.properties.JsonFilesProperties;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
-import kr.co.estate.dto.trade.NaverMapFilterDto;
-import kr.co.estate.dto.trade.TradeAggsDto;
-import kr.co.estate.dto.trade.TradeSearchDto;
-import kr.co.estate.dto.trade.TradeStatsDto;
+import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
+import kr.co.estate.dto.trade.*;
 import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
+import kr.co.estate.dto.trade.embedded.stats.TradeStatsPeriodItem;
 import kr.co.estate.entity.TradeMasterEntity;
 import kr.co.estate.entity.collection.TradeMasterEntities;
 import kr.co.estate.mapper.TradeMasterMapper;
@@ -44,7 +43,11 @@ public class TradeServiceImpl implements TradeService {
             // TODO : throw custom exception
         }
         return list.stream()
-                .filter(x -> x.isContainArea(naverMapDto.getNorthLat(), naverMapDto.getSouthLat(), naverMapDto.getWestLong(), naverMapDto.getEastLong()))
+                .filter(x -> x.isContainArea(
+                        naverMapDto.getNorthLat(),
+                        naverMapDto.getSouthLat(),
+                        naverMapDto.getWestLong(),
+                        naverMapDto.getEastLong()))
                 .collect(Collectors.toList());
     }
 
@@ -86,5 +89,25 @@ public class TradeServiceImpl implements TradeService {
                 .collect(Collectors.toList());
 
         return TradeStatsDto.valueOf(result);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TradeStatsPeriodDto statsPeriod(TradeStatsPeriodRequestDto tradeStatsPeriodRequestDto) {
+        List<TradeMasterEntity> list = tradeMasterRepositorySupport
+                .findBySearchQuery(tradeStatsPeriodRequestDto.asQuery(), false);
+
+        TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
+
+        List<TradeStatsPeriodItem> result = tradeMasterEntities
+                .getDistinctDealDate()
+                .stream()
+                .map(x -> TradeStatsPeriodItem.of(x,
+                        tradeMasterEntities.filterDealDateDistinctAmountAverage(x),
+                        tradeMasterEntities.filterDealDateDistinctCount(x)))
+                .sorted(Comparator.comparing(TradeStatsPeriodItem::getDate))
+                .collect(Collectors.toList());
+
+        return TradeStatsPeriodDto.valueOf(result);
     }
 }

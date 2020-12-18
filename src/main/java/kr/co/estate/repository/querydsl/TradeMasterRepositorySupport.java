@@ -36,25 +36,35 @@ public class TradeMasterRepositorySupport {
                     TradeType.APARTMENT_TRADE, TradeType.APARTMENT_RENT, TradeType.OFFICE_TRADE, TradeType.OFFICE_RENT);
         }
 
+        if (searchDto.getFromDate() != null) {
+            where = where.and(qTradeMasterEntity.deal.dealDate.after(searchDto.getFromDate()));
+        }
+        if (searchDto.getToDate() != null) {
+            where = where.and(qTradeMasterEntity.deal.dealDate.before(searchDto.getToDate()));
+        }
+
         jpaQuery.where(where
                         .and(qTradeMasterEntity.location.regionCode.eq(searchDto.getRegion()))
                         .and(qTradeMasterEntity.location.sigunguCode.eq(searchDto.getSigungu())));
 
         ComparableExpressionBase<?> sortBy = qTradeMasterEntity.amount;
 
-        switch (searchDto.getSortType()) {
-            case "amount": {
-                sortBy = qTradeMasterEntity.amount;
-            } break;
-            case "dealDate": {
-                sortBy = qTradeMasterEntity.deal.dealDate;
-            } break;
-        }
-
-        if ("desc".equals(searchDto.getSortMode())) {
-            jpaQuery.orderBy(sortBy.desc());
-        } else {
-            jpaQuery.orderBy(sortBy.asc());
+        if (searchDto.getSortType() != null) {
+            switch (searchDto.getSortType()) {
+                case "amount": {
+                    sortBy = qTradeMasterEntity.amount;
+                }
+                break;
+                case "dealDate": {
+                    sortBy = qTradeMasterEntity.deal.dealDate;
+                }
+                break;
+            }
+            if ("desc".equals(searchDto.getSortMode())) {
+                jpaQuery.orderBy(sortBy.desc());
+            } else {
+                jpaQuery.orderBy(sortBy.asc());
+            }
         }
 
         if (isPaging) {

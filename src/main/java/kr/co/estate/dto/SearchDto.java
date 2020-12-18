@@ -1,13 +1,15 @@
 package kr.co.estate.dto;
 
-import io.swagger.annotations.ApiParam;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SearchDto {
     private String name;
     private String region;
@@ -16,7 +18,8 @@ public class SearchDto {
     private int size;
     private String sortType;
     private String sortMode;
-
-    @ApiParam(value = "거래 유형", example = "TRADE", required = true)
     private String tradeType;
+    private LocalDate fromDate;
+    private LocalDate toDate;
+    private boolean isPaging;
 }

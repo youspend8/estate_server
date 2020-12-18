@@ -16,8 +16,14 @@ public class SwaggerApiInfo {
     /**
      * /api/v1/trade/stats
      */
-    public static final String TRADE_STATS_VALUE = "지역별 실거래 내역 기준 통계 데이터";
+    public static final String TRADE_STATS_VALUE = "지역별 실거래 내역 통계 데이터";
     public static final String TRADE_STATS_NOTES = "특정 지역 및 검색 쿼리에 따른 해당 지역의 실거래 내역을 바탕으로 한 통계 값 요청";
+
+    /**
+     * /api/v1/trade/stats/period
+     */
+    public static final String TRADE_STATS_PERIOD_VALUE = "기간별 실거래 내역 통계 데이터";
+    public static final String TRADE_STATS_PERIOD_NOTES = "특정 기간 및 검색 쿼리에 따른 해당 지역의 실거래 내역을 바탕으로 한 통계 값 요청";
 
     /**
      * /api/v1/city/search

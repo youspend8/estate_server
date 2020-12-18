@@ -2,10 +2,8 @@ package kr.co.estate.service;
 
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
-import kr.co.estate.dto.trade.NaverMapFilterDto;
-import kr.co.estate.dto.trade.TradeAggsDto;
-import kr.co.estate.dto.trade.TradeSearchDto;
-import kr.co.estate.dto.trade.TradeStatsDto;
+import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
+import kr.co.estate.dto.trade.*;
 
 import java.util.List;
 
@@ -41,4 +39,11 @@ public interface TradeService {
      * @return {@link TradeStatsDto}
      */
     TradeStatsDto stats(SearchDto searchDto);
+
+    /**
+     * 특정 기간 및 필터링을 적용한 조건에 해당되는 모든 실거래 목록의 집계 정보(세부 지역별 평당가격, 거래건수) 반환
+     * @param searchDto {@link TradeStatsPeriodRequestDto}
+     * @return {@link TradeStatsPeriodDto}
+     */
+    TradeStatsPeriodDto statsPeriod(TradeStatsPeriodRequestDto tradeStatsPeriodRequestDto);
 }

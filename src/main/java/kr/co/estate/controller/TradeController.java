@@ -5,10 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.estate.constants.SwaggerApiInfo;
 import kr.co.estate.dto.NaverMapDto;
 import kr.co.estate.dto.SearchDto;
-import kr.co.estate.dto.trade.NaverMapFilterDto;
-import kr.co.estate.dto.trade.TradeAggsDto;
-import kr.co.estate.dto.trade.TradeSearchDto;
-import kr.co.estate.dto.trade.TradeStatsDto;
+import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
+import kr.co.estate.dto.trade.*;
 import kr.co.estate.service.TradeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,12 +53,31 @@ public class TradeController {
                 ApiResponse.valueOf(result));
     }
 
+    /**
+     * API : 특정 기간 및 검색 쿼리에 따른 해당 지역의 실거래 내역을 바탕으로 한 통계 값 요청
+     * @param tradeStatsPeriodRequestDto {@link TradeStatsPeriodRequestDto}
+     * @return {@link TradeStatsDto}
+     */
+    @GetMapping(value = "/trade/stats/period")
+    @ApiOperation(value = SwaggerApiInfo.TRADE_STATS_PERIOD_VALUE, notes = SwaggerApiInfo.TRADE_STATS_PERIOD_NOTES)
+    public ResponseEntity<ApiResponse<TradeStatsPeriodDto>> statsPeriod(
+            @ModelAttribute TradeStatsPeriodRequestDto tradeStatsPeriodRequestDto) {
+        log.debug("GET /trade/stats/period :: request ==> tradeStatsPeriodRequestDto : {}", tradeStatsPeriodRequestDto);
+
+        TradeStatsPeriodDto result = tradeService.statsPeriod(tradeStatsPeriodRequestDto);
+
+        log.debug("GET /trade/stats/period :: response ==> {}", result);
+
+        return ResponseEntity.ok(
+                ApiResponse.valueOf(result));
+    }
+
     @GetMapping(value = "/trade/aggregate")
     @ApiOperation(value = SwaggerApiInfo.TRADE_AGGREGATE_VALUE, notes = SwaggerApiInfo.TRADE_AGGREGATE_NOTES)
     public ResponseEntity<ApiResponse<List<TradeAggsDto>>> aggregate(
             @ModelAttribute NaverMapDto naverMapDto,
             @ModelAttribute NaverMapFilterDto naverMapFilterDto) {
-        log.debug("GET /trade/aggregate :: request ==> coordinatesDto : {}", naverMapDto);
+        log.debug("GET /trade/aggregate :: request ==> naverMapDto : {}", naverMapDto);
 
         List<TradeAggsDto> result = tradeService.aggregateJson(naverMapDto, naverMapFilterDto);
 
