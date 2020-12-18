@@ -1,7 +1,7 @@
 package kr.co.estate.service;
 
 import kr.co.estate.dto.NaverMapDto;
-import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.query.TradeQuery;
 import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
 import kr.co.estate.dto.trade.*;
 
@@ -28,17 +28,17 @@ public interface TradeService {
 
     /**
      * 특정 지역, 특정 기준으로의 정렬 및 페이징 처리를 하여 조건에 해당되는 실거래 내역 목록 반환
-     * @param searchDto {@link SearchDto}
+     * @param tradeQuery {@link TradeQuery}
      * @return {@link TradeSearchDto} List
      */
-    List<TradeSearchDto> search(SearchDto searchDto);
+    List<TradeSearchDto> search(TradeQuery tradeQuery);
 
     /**
      * 특정 지역 및 필터링을 적용한 조건에 해당되는 모든 실거래 목록의 집계 정보(세부 지역별 평당가격, 거래건수) 반환
-     * @param searchDto {@link SearchDto}
+     * @param tradeQuery {@link TradeQuery}
      * @return {@link TradeStatsDto}
      */
-    TradeStatsDto stats(SearchDto searchDto);
+    TradeStatsDto stats(TradeQuery tradeQuery);
 
     /**
      * 특정 기간 및 필터링을 적용한 조건에 해당되는 모든 실거래 목록의 집계 정보(세부 지역별 평당가격, 거래건수) 반환

@@ -1,7 +1,7 @@
 package kr.co.estate.dto.request;
 
 import io.swagger.annotations.ApiParam;
-import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.query.TradeQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,8 +30,8 @@ public class TradeStatsPeriodRequestDto {
     @ApiParam(value = "집계 종료 일시", example = "2020-11-30", required = true)
     private LocalDate toDate;
 
-    public SearchDto asQuery() {
-        return SearchDto.builder()
+    public TradeQuery asQuery() {
+        return TradeQuery.builder()
                 .name(name)
                 .region(region)
                 .sigungu(sigungu)

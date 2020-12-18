@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.estate.config.properties.JsonFilesProperties;
 import kr.co.estate.dto.NaverMapDto;
-import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.query.TradeQuery;
 import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
 import kr.co.estate.dto.trade.*;
 import kr.co.estate.dto.trade.embedded.stats.TradeStatsCityDto;
@@ -63,9 +63,9 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradeSearchDto> search(SearchDto searchDto) {
+    public List<TradeSearchDto> search(TradeQuery tradeQuery) {
         return tradeMasterRepositorySupport
-                .findBySearchQuery(searchDto, true)
+                .findBySearchQuery(tradeQuery, true)
                 .stream()
                 .map(TradeSearchDto::valueOf)
                 .collect(Collectors.toList());
@@ -73,9 +73,9 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     @Transactional(readOnly = true)
-    public TradeStatsDto stats(SearchDto searchDto) {
+    public TradeStatsDto stats(TradeQuery tradeQuery) {
         List<TradeMasterEntity> list =
-                tradeMasterRepositorySupport.findBySearchQuery(searchDto, false);
+                tradeMasterRepositorySupport.findBySearchQuery(tradeQuery, false);
 
         TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 

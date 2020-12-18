@@ -1,4 +1,4 @@
-package kr.co.estate.dto;
+package kr.co.estate.dto.query;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchDto {
+public class TradeQuery {
     private String name;
     private String region;
     private String sigungu;

@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import kr.co.estate.constants.SwaggerApiInfo;
 import kr.co.estate.dto.NaverMapDto;
-import kr.co.estate.dto.SearchDto;
+import kr.co.estate.dto.query.TradeQuery;
 import kr.co.estate.dto.request.TradeStatsPeriodRequestDto;
 import kr.co.estate.dto.trade.*;
 import kr.co.estate.service.TradeService;
@@ -28,10 +28,10 @@ public class TradeController {
     @GetMapping(value = "/trade/search")
     @ApiOperation(value = SwaggerApiInfo.TRADE_SEARCH_VALUE, notes = SwaggerApiInfo.TRADE_SEARCH_NOTES)
     public ResponseEntity<ApiResponse<List<TradeSearchDto>>> search(
-            @ModelAttribute SearchDto searchDto) {
-        log.debug("GET /trade/search :: request ==> searchDto : {}", searchDto);
+            @ModelAttribute TradeQuery tradeQuery) {
+        log.debug("GET /trade/search :: request ==> searchDto : {}", tradeQuery);
 
-        List<TradeSearchDto> result = tradeService.search(searchDto);
+        List<TradeSearchDto> result = tradeService.search(tradeQuery);
 
         log.debug("GET /trade/search :: response ==> {}", result);
 
@@ -42,10 +42,10 @@ public class TradeController {
     @GetMapping(value = "/trade/stats")
     @ApiOperation(value = SwaggerApiInfo.TRADE_STATS_VALUE, notes = SwaggerApiInfo.TRADE_STATS_NOTES)
     public ResponseEntity<ApiResponse<TradeStatsDto>> stats(
-            @ModelAttribute SearchDto searchDto) {
-        log.debug("GET /trade/stats :: request ==> searchDto : {}", searchDto);
+            @ModelAttribute TradeQuery tradeQuery) {
+        log.debug("GET /trade/stats :: request ==> searchDto : {}", tradeQuery);
 
-        TradeStatsDto result = tradeService.stats(searchDto);
+        TradeStatsDto result = tradeService.stats(tradeQuery);
 
         log.debug("GET /trade/stats :: response ==> {}", result);
 
