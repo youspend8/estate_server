@@ -36,6 +36,16 @@ public class TradeMasterRepositorySupport {
                     TradeType.APARTMENT_TRADE, TradeType.APARTMENT_RENT, TradeType.OFFICE_TRADE, TradeType.OFFICE_RENT);
         }
 
+        if (tradeQuery.getCityType() >= 0) {
+            where = where.and(qTradeMasterEntity.location.regionCode.eq(tradeQuery.getRegion()));
+        }
+        if (tradeQuery.getCityType() >= 1) {
+            where = where.and(qTradeMasterEntity.location.sigunguCode.eq(tradeQuery.getSigungu()));
+        }
+        if (tradeQuery.getCityType() >= 2) {
+            where = where.and(qTradeMasterEntity.location.umdCode.eq(tradeQuery.getDong()));
+        }
+
         if (tradeQuery.getFromDate() != null) {
             where = where.and(qTradeMasterEntity.deal.dealDate.after(tradeQuery.getFromDate()));
         }
@@ -43,9 +53,7 @@ public class TradeMasterRepositorySupport {
             where = where.and(qTradeMasterEntity.deal.dealDate.before(tradeQuery.getToDate()));
         }
 
-        jpaQuery.where(where
-                        .and(qTradeMasterEntity.location.regionCode.eq(tradeQuery.getRegion()))
-                        .and(qTradeMasterEntity.location.sigunguCode.eq(tradeQuery.getSigungu())));
+        jpaQuery.where(where);
 
         ComparableExpressionBase<?> sortBy = qTradeMasterEntity.amount;
 

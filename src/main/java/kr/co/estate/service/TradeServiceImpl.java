@@ -78,14 +78,16 @@ public class TradeServiceImpl implements TradeService {
         List<TradeMasterEntity> list = tradeMasterRepositorySupport
                 .findBySearchQuery(tradeStatsRequestDto.asQuery());
 
+        int cityType = tradeStatsRequestDto.getCityType();
+
         TradeMasterEntities tradeMasterEntities = new TradeMasterEntities(list);
 
         List<TradeStatsCityDto> result = tradeMasterEntities
-                .getDistinctDong()
+                .getDistinctCityBy(cityType)
                 .stream()
                 .map(x -> TradeStatsCityDto.of(x,
-                        tradeMasterEntities.filterDongDistinctAmountAverage(x),
-                        tradeMasterEntities.filterDongDistinctCount(x)))
+                        tradeMasterEntities.filterCityDistinctAmountAverageBy(cityType, x),
+                        tradeMasterEntities.filterCityDistinctCountBy(cityType, x)))
                 .sorted(Comparator.comparingDouble(TradeStatsCityDto::getPrice).reversed())
                 .collect(Collectors.toList());
 

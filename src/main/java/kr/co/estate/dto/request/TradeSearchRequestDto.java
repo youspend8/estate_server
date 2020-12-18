@@ -21,6 +21,12 @@ public class TradeSearchRequestDto {
     @ApiParam(value = "시군구 코드", example = "170", required = true)
     private String sigungu;
 
+    @ApiParam(value = "읍면동 코드", example = "12900", required = true)
+    private String dong;
+
+    @ApiParam(value = "지역 코드 타입", example = "1", required = true)
+    private int cityType;
+
     @ApiParam(value = "조회 페이지(Paging Offset)", example = "0", required = true)
     private int page;
 
@@ -47,6 +53,8 @@ public class TradeSearchRequestDto {
                 .name(name)
                 .region(region)
                 .sigungu(sigungu)
+                .dong(dong)
+                .cityType(cityType)
                 .page(page)
                 .size(size)
                 .sortMode(sortMode)

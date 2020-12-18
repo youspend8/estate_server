@@ -21,6 +21,12 @@ public class TradeStatsRequestDto {
     @ApiParam(value = "시군구 코드", example = "170", required = true)
     private String sigungu;
 
+    @ApiParam(value = "읍면동 코드", example = "12900", required = true)
+    private String dong;
+
+    @ApiParam(value = "지역 코드 타입", example = "1", required = true)
+    private int cityType;
+
     @ApiParam(value = "거래 유형", example = "TRADE", required = true)
     private String tradeType;
 
@@ -35,6 +41,8 @@ public class TradeStatsRequestDto {
                 .name(name)
                 .region(region)
                 .sigungu(sigungu)
+                .dong(dong)
+                .cityType(cityType)
                 .tradeType(tradeType)
                 .fromDate(fromDate)
                 .toDate(toDate)
