@@ -30,4 +30,10 @@ public class SwaggerApiInfo {
      */
     public static final String TRADE_CITY_SEARCH_VALUE = "지역 목록 조회";
     public static final String TRADE_CITY_SEARCH_NOTES = "특정 좌표(위도, 경도)를 기준으로 Zoom Level에 따라 허용 거리에 포함되는 지역 목록 조회";
+
+    /**
+     * /api/v1/search/assist
+     */
+    public static final String SEARCH_ASSIST_VALUE = "검색 자동완성 목록";
+    public static final String SEARCH_ASSIST_NOTES = "검색 키워드로 입력한 값을 미리 인덱싱 해놓은 목록들에 포함 여부가 존재하는 경우 목록";
 }

@@ -26,4 +26,6 @@ mybatis:
 
 json-files:
   base-path: /data/json/
+#  base-path: /Users/imchaehun/data/json
   aggregation: aggregation
+  search: search
